@@ -22,9 +22,7 @@ const App = () => {
     checkAuth()
   },[checkAuth]);
 
-  console.log({authUser});
-
-  if(isCheckingAuth && !authUser)  
+    if(isCheckingAuth && !authUser)  
     return(
 
     <div className="flex items-center justify-center h-screen">
@@ -33,7 +31,7 @@ const App = () => {
     </div>
   ) 
   return (
-    <div data-Theme= {theme}>
+    <div data-theme={theme}>
 
       <Navbar />
 
