@@ -1,7 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
+
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, cupcake, bumblebee, emerald,
     corporate, synthwave, retro, cyberpunk, valentine, halloween, garden, forest,
     aqua, lofi, pastel, fantasy, wireframe, black, luxury, dracula, cmyk, autumn,
     business, acid, lemonade, night, coffee, winter, dim, nord, sunset;
+}
+
+:root {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+}
+
+.auth-page {
+  background: radial-gradient(circle at top left, color-mix(in oklab, var(--color-primary) 16%, transparent) 0%, transparent 40%),
+    radial-gradient(circle at bottom right, color-mix(in oklab, var(--color-secondary) 15%, transparent) 0%, transparent 35%);
+}
+
+.auth-side-panel {
+  background: linear-gradient(
+    165deg,
+    color-mix(in oklab, var(--color-base-200) 75%, var(--color-primary) 25%) 0%,
+    var(--color-base-200) 35%,
+    color-mix(in oklab, var(--color-base-200) 80%, var(--color-secondary) 20%) 100%
+  );
 }
