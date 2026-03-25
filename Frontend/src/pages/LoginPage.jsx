@@ -2,40 +2,46 @@ import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { Link } from "react-router-dom";
-import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare  } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData , setFormData ] = useState({
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const { login , isLoggingIn } = useAuthStore();
+  const { login, isLoggingIn } = useAuthStore();
+
+  const validateForm = () => {
+    if (!formData.email.trim()) return toast.error("Email is required");
+    if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
+    if (!formData.password) return toast.error("Password is required");
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData);
+    if (validateForm()) {
+      login(formData);
+    }
   };
-  return (  
-  <div className="min-h-screen grid lg:grid-cols-2">
-      {/* left side */}
+
+  return (
+    <div className="min-h-screen grid lg:grid-cols-2 auth-page">
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
-        <div className="w-full max-w-md space-y-8">
-          {/* LOGO */}
-          <div className="text-center mb-8">
+        <div className="w-full max-w-md space-y-8 rounded-2xl border border-base-300/70 p-8 bg-base-100/80 backdrop-blur">
+          <div className="text-center mb-2">
             <div className="flex flex-col items-center gap-2 group">
-              <div
-                className="size-12 rounded-xl bg-primary/10 flex items-center justify-center 
-              group-hover:bg-primary/20 transition-colors"
-              >
+              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                 <MessageSquare className="size-6 text-primary" />
               </div>
-              <h1 className="text-2xl font-bold mt-2">Create Account</h1>
-              <p className="text-base-content/60">Get started with your free account</p>
+              <h1 className="text-2xl font-bold mt-2">Welcome back</h1>
+              <p className="text-base-content/60">Sign in to continue your conversations on LoopTalk</p>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="form-control">
               <label className="label">
                 <span className="label-text font-medium">Email</span>
@@ -46,7 +52,7 @@ const LoginPage = () => {
                 </div>
                 <input
                   type="email"
-                  className="input input-bordered w-full pl-10 "
+                  className="input input-bordered w-full pl-10"
                   placeholder="you@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -64,7 +70,7 @@ const LoginPage = () => {
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`input input-bordered w-full pl-10`}
+                  className="input input-bordered w-full pl-10"
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -74,11 +80,7 @@ const LoginPage = () => {
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? (
-                    <EyeOff className="size-5 text-base-content/40" />
-                  ) : (
-                    <Eye className="size-5 text-base-content/40" />
-                  )}
+                  {showPassword ? <EyeOff className="size-5 text-base-content/40" /> : <Eye className="size-5 text-base-content/40" />}
                 </button>
               </div>
             </div>
@@ -106,14 +108,12 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* right side */}
-
       <AuthImagePattern
-        title={"Welcome Back"}
-        subtitle={"Sign in to continue your conservations and catch up with your friends."}
+        title="Welcome Back"
+        subtitle="Sign in to continue your conversations and catch up with your friends."
       />
-    </div> 
+    </div>
   );
 };
 
-export default LoginPage ;
+export default LoginPage;
