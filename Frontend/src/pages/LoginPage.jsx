@@ -70,9 +70,9 @@ const LoginPage = () => {
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? (
-                    <EyeOff className="size-5 text-[var(--text-muted)]" />
-                  ) : (
                     <Eye className="size-5 text-[var(--text-muted)]" />
+                  ) : (
+                     <EyeOff className="size-5 text-[var(--text-muted)]" />
                   )}
                 </button>
               </div>

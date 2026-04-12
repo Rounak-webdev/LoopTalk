@@ -16,18 +16,12 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 5001;
 const isDebugHttpEnabled = process.env.DEBUG_HTTP === "true";
 
-app.use(
-  cors({
-    origin(origin, callback) {
-      if (isAllowedOrigin(origin)) {
-        return callback(null, true);
-      }
+app.use(cors({
+  origin: "https://your-frontend.vercel.app",
+  credentials: true
+}));
 
-      return callback(new Error(`CORS blocked for origin: ${origin}`));
-    },
-    credentials: true,
-  })
-);
+
 app.use(cookieParser());
 app.use(express.json({ limit: "30mb" }));
 app.use(express.urlencoded({ extended: true, limit: "30mb" }));
@@ -53,8 +47,8 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/users", userRoutes);
 
-app.use((req, res) => {
-  res.status(404).json({ message: `Route not found: ${req.method} ${req.originalUrl}` });
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
 });
 
 app.use((error, _req, res, _next) => {
