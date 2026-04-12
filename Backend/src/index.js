@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5001;
 const isDebugHttpEnabled = process.env.DEBUG_HTTP === "true";
 
 app.use(cors({
-  origin: "https://your-frontend.vercel.app",
+  origin: "https://loop-talk-two.vercel.app ",
   credentials: true
 }));
 
