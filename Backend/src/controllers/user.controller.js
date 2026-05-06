@@ -42,9 +42,12 @@ export const getContacts = async (req, res) => {
     }
 
     const currentUserId = req.user._id;
+    const removedFriendIds = req.user.removedFriendIds || [];
     const onlineUsers = new Set(getOnlineUserIds());
 
-    const users = await User.find({ _id: { $ne: currentUserId } })
+    const users = await User.find({
+      _id: { $ne: currentUserId, $nin: removedFriendIds },
+    })
       .select("-password -verificationOtp -verificationOtpExpiresAt -passwordResetToken -passwordResetExpiresAt")
       .sort({ name: 1 });
 
@@ -54,6 +57,34 @@ export const getContacts = async (req, res) => {
         isOnline: onlineUsers.has(String(user._id)),
       }))
     );
+  } catch (error) {
+    console.error("ERROR:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const removeFriend = async (req, res) => {
+  try {
+    if (!req.user?._id) {
+      return res.status(401).json({ message: "Unauthorized user" });
+    }
+
+    const { id: friendId } = req.params;
+
+    if (!friendId || friendId === String(req.user._id)) {
+      return res.status(400).json({ message: "Invalid friend id" });
+    }
+
+    const friend = await User.findById(friendId).select("_id");
+    if (!friend) {
+      return res.status(404).json({ message: "Friend not found" });
+    }
+
+    await User.findByIdAndUpdate(req.user._id, {
+      $addToSet: { removedFriendIds: friend._id },
+    });
+
+    return res.status(200).json({ message: "Friend removed" });
   } catch (error) {
     console.error("ERROR:", error);
     return res.status(500).json({ message: "Internal server error" });

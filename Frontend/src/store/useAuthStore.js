@@ -4,7 +4,8 @@ import { axiosInstance } from "../lib/axios.js";
 import { SOCKET_URL } from "../lib/runtime.js";
 import toast from "react-hot-toast";
 
-const getErrorMessage = (error, fallback) => error?.response?.data?.message || fallback;
+const getErrorMessage = (error, fallback) =>
+  error?.response?.data?.message || error?.userMessage || fallback;
 const pendingEmailKey = "looptalk-pending-email";
 const pendingOtpSessionKey = "looptalk-pending-otp-session";
 const readPendingOtpSession = () => {

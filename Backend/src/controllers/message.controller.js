@@ -53,11 +53,44 @@ export const getUsersForSidebar = async (req, res) => {
     }
 
     const loggedInUserId = req.user._id;
-    const filteredUsers = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
+    const removedFriendIds = req.user.removedFriendIds || [];
+    const filteredUsers = await User.find({
+      _id: { $ne: loggedInUserId, $nin: removedFriendIds },
+    }).select("-password");
     res.status(200).json(filteredUsers);
   } catch (error) {
     console.error("ERROR:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const deleteConversation = async (req, res) => {
+  try {
+    const { id: userToChatId } = req.params;
+    const myId = req.user._id;
+
+    if (!myId) {
+      return res.status(401).json({ message: "Unauthorized user" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(userToChatId)) {
+      return res.status(400).json({ message: "Invalid user id" });
+    }
+
+    const result = await Message.deleteMany({
+      $or: [
+        { senderId: myId, receiverId: userToChatId },
+        { senderId: userToChatId, receiverId: myId },
+      ],
+    });
+
+    return res.status(200).json({
+      message: "Chat deleted",
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    console.error("ERROR:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 

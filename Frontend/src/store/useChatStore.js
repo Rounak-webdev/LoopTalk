@@ -3,7 +3,8 @@ import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
 import { useAuthStore } from "./useAuthStore";
 
-const getErrorMessage = (error, fallback) => error?.response?.data?.message || fallback;
+const getErrorMessage = (error, fallback) =>
+  error?.response?.data?.message || error?.userMessage || fallback;
 const WEBRTC_CONFIG = {
   iceServers: [
     { urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"] },
@@ -173,6 +174,40 @@ export const useChatStore = create((set, get) => ({
     } catch (error) {
       toast.error(getErrorMessage(error, "Message failed to send"));
       throw error;
+    }
+  },
+
+  deleteChat: async (userId) => {
+    const targetUserId = userId || get().selectedUser?._id;
+    if (!targetUserId) return false;
+
+    try {
+      await axiosInstance.delete(`/messages/${targetUserId}`);
+      set({ messages: [] });
+      toast.success("Chat deleted");
+      return true;
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Unable to delete chat"));
+      return false;
+    }
+  },
+
+  removeFriend: async (userId) => {
+    const targetUserId = userId || get().selectedUser?._id;
+    if (!targetUserId) return false;
+
+    try {
+      await axiosInstance.delete(`/users/${targetUserId}`);
+      set((state) => ({
+        users: state.users.filter((user) => user._id !== targetUserId),
+        selectedUser: state.selectedUser?._id === targetUserId ? null : state.selectedUser,
+        messages: state.selectedUser?._id === targetUserId ? [] : state.messages,
+      }));
+      toast.success("Friend removed");
+      return true;
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Unable to remove friend"));
+      return false;
     }
   },
 

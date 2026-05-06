@@ -1,4 +1,3 @@
-import { GoogleLogin } from "@react-oauth/google";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
@@ -10,13 +9,60 @@ import {
   MessageSquareText,
   User,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppConfig } from "../components/useAppConfig";
 import { useAuthStore } from "../store/useAuthStore";
 
 const MotionDiv = motion.div;
+const GOOGLE_SCRIPT_SRC = "https://accounts.google.com/gsi/client";
+let googleScriptPromise;
+let initializedGoogleClientId = "";
+let latestGoogleCredentialHandler = () => {};
+
+const loadGoogleScript = () => {
+  if (window.google?.accounts?.id) {
+    return Promise.resolve();
+  }
+
+  if (!googleScriptPromise) {
+    googleScriptPromise = new Promise((resolve, reject) => {
+      const existingScript = document.querySelector(`script[src="${GOOGLE_SCRIPT_SRC}"]`);
+
+      if (existingScript) {
+        existingScript.addEventListener("load", resolve, { once: true });
+        existingScript.addEventListener("error", reject, { once: true });
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = GOOGLE_SCRIPT_SRC;
+      script.async = true;
+      script.defer = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  return googleScriptPromise;
+};
+
+const initializeGoogleSignIn = (clientId, onCredential) => {
+  latestGoogleCredentialHandler = onCredential;
+
+  if (initializedGoogleClientId === clientId) return;
+
+  window.google.accounts.id.initialize({
+    client_id: clientId,
+    callback: (response) => latestGoogleCredentialHandler(response),
+    use_fedcm_for_prompt: true,
+  });
+
+  initializedGoogleClientId = clientId;
+};
+
 const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
 const blockedDomains = new Set([
   "example.com",
@@ -45,6 +91,7 @@ const AuthPage = () => {
     email: "",
     password: "",
   });
+  const googleButtonRef = useRef(null);
   const { googleClientId, isGoogleReady } = useAppConfig();
 
   const {
@@ -61,6 +108,40 @@ const AuthPage = () => {
 
   const isSignup = mode === "signup";
   const isBusy = isSigningUp || isLoggingIn || isAuthWorking;
+  const googleButtonText = isSignup ? "signup_with" : "signin_with";
+
+  useEffect(() => {
+    if (!googleClientId || !googleButtonRef.current) return;
+
+    let isMounted = true;
+
+    loadGoogleScript()
+      .then(() => {
+        if (!isMounted || !window.google?.accounts?.id || !googleButtonRef.current) return;
+
+        initializeGoogleSignIn(googleClientId, async ({ credential }) => {
+          if (!credential) return;
+          await googleAuth(credential);
+        });
+
+        googleButtonRef.current.innerHTML = "";
+        window.google.accounts.id.renderButton(googleButtonRef.current, {
+          theme: "filled_black",
+          shape: "pill",
+          text: googleButtonText,
+          width: 320,
+        });
+      })
+      .catch(() => {
+        if (isMounted) {
+          toast.error("Unable to load Google Sign-In");
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [googleButtonText, googleAuth, googleClientId]);
 
   const heading = useMemo(
     () =>
@@ -269,18 +350,8 @@ const AuthPage = () => {
           </div>
 
           {googleClientId ? (
-            <div className="overflow-hidden rounded-2xl">
-              <GoogleLogin
-                theme="filled_black"
-                shape="pill"
-                text={isSignup ? "signup_with" : "signin_with"}
-                width="100%"
-                onSuccess={async ({ credential }) => {
-                  if (!credential) return;
-                  await googleAuth(credential);
-                }}
-                onError={() => toast.error("Google sign-in failed")}
-              />
+            <div className="flex min-h-11 justify-center overflow-hidden rounded-2xl">
+              <div ref={googleButtonRef} />
             </div>
           ) : !isGoogleReady ? (
             <div className="w-full rounded-2xl border border-[var(--border)] px-4 py-3 text-sm text-[var(--text-muted)]">

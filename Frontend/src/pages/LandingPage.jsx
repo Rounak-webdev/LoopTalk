@@ -134,20 +134,20 @@ const featureCards = [
 ];
 
 const screenCardClass =
-  "relative overflow-hidden rounded-[24px] border border-[var(--border)] bg-[color:var(--surface)] p-4 shadow-[0_18px_48px_rgba(0,0,0,0.12)]";
+  "relative overflow-hidden rounded-[28px] border border-white/10 bg-[color:var(--surface)]/85 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.16)] backdrop-blur-2xl transition duration-300 ease-out hover:-translate-y-1 hover:border-[var(--border-strong)] hover:shadow-[0_30px_90px_rgba(0,0,0,0.22)]";
 
 const PhoneFrame = ({ children, className = "" }) => (
-  <div className={`relative mx-auto aspect-[9/16] w-full max-w-[300px] max-h-[560px] rounded-[32px] border border-[var(--border)] bg-[color:var(--surface-contrast)] p-2 shadow-[0_24px_64px_rgba(0,0,0,0.18)] ${className}`}>
-    <div className="absolute left-1/2 top-2 h-6 w-28 -translate-x-1/2 rounded-full bg-[color:var(--bg)]/80" />
-    <div className="h-full overflow-hidden rounded-[24px] bg-[var(--surface-strong)]">{children}</div>
+  <div className={`relative mx-auto aspect-[9/16] w-full max-w-[300px] max-h-[560px] rounded-[36px] border border-white/12 bg-[color:var(--surface-contrast)]/95 p-2.5 shadow-[0_34px_110px_rgba(0,0,0,0.34),0_0_0_1px_rgba(255,255,255,0.04)_inset] transition duration-300 ease-out ${className}`}>
+    <div className="absolute left-1/2 top-2.5 z-10 h-5 w-24 -translate-x-1/2 rounded-full bg-[color:var(--bg)]/80 shadow-[0_1px_0_rgba(255,255,255,0.08)_inset]" />
+    <div className="h-full overflow-hidden rounded-[28px] bg-[var(--surface-strong)] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset]">{children}</div>
   </div>
 );
 
 const SectionHeader = ({ eyebrow, title, copy }) => (
-  <div className="space-y-3">
-    <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--text-muted)]">{eyebrow}</p>
-    <h2 className="section-title text-2xl font-bold text-[var(--text-strong)] sm:text-3xl">{title}</h2>
-    <p className="max-w-2xl text-sm leading-6 text-[var(--text-soft)] sm:text-base">{copy}</p>
+  <div className="space-y-4">
+    <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[var(--text-muted)]">{eyebrow}</p>
+    <h2 className="section-title text-2xl font-bold leading-tight text-[var(--text-strong)] sm:text-3xl">{title}</h2>
+    <p className="max-w-2xl text-sm leading-7 text-[var(--text-soft)] sm:text-base">{copy}</p>
   </div>
 );
 
@@ -174,7 +174,7 @@ const OnboardingScreen = () => (
       </div>
       <button
         type="button"
-        className="mt-10 flex w-full items-center justify-center gap-2 rounded-[22px] bg-[#25D366] px-5 py-4 font-semibold text-[#08130b] shadow-[0_18px_40px_rgba(37,211,102,0.28)]"
+        className="mt-10 flex w-full items-center justify-center gap-2 rounded-[20px] bg-[linear-gradient(135deg,#34d399,#25D366_48%,#16a34a)] px-5 py-4 font-semibold text-[#08130b] shadow-[0_18px_46px_rgba(37,211,102,0.32)] transition duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_24px_58px_rgba(37,211,102,0.42)] active:translate-y-0"
       >
         <span>Get Started</span>
         <ArrowRight className="size-4" />
@@ -211,13 +211,13 @@ const PermissionScreen = () => (
       <div className="mt-8 space-y-3">
         <button
           type="button"
-          className="w-full rounded-[22px] bg-[#25D366] px-5 py-4 font-semibold text-[#08130b] shadow-[0_18px_40px_rgba(37,211,102,0.28)]"
+          className="w-full rounded-[20px] bg-[linear-gradient(135deg,#34d399,#25D366_48%,#16a34a)] px-5 py-4 font-semibold text-[#08130b] shadow-[0_18px_46px_rgba(37,211,102,0.32)] transition duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_24px_58px_rgba(37,211,102,0.42)] active:translate-y-0"
         >
           Allow Access
         </button>
         <button
           type="button"
-          className="w-full rounded-[22px] border border-[var(--border)] bg-[color:var(--surface)] px-5 py-4 font-medium text-[var(--text-strong)]"
+          className="w-full rounded-[20px] border border-[var(--border)] bg-[color:var(--surface)]/80 px-5 py-4 font-medium text-[var(--text-strong)] transition duration-300 ease-out hover:border-[var(--border-strong)] hover:bg-[color:var(--surface)] active:scale-[0.99]"
         >
           Not Now
         </button>
@@ -284,10 +284,10 @@ const ContactsScreen = ({ activeContactId, onSelectContact }) => (
                 key={contact.id}
                 type="button"
                 onClick={() => onSelectContact(contact.id)}
-                className={`flex w-full items-center gap-3 rounded-[24px] border p-4 text-left transition ${
+                className={`flex w-full items-center gap-3 rounded-[22px] border p-4 text-left shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition duration-300 ease-out hover:-translate-y-0.5 ${
                   isActive
-                    ? "border-[#25D366]/40 bg-[rgba(37,211,102,0.12)]"
-                    : "border-[var(--border)] bg-[color:var(--surface)] hover:border-[#25D366]/30"
+                    ? "border-[#25D366]/45 bg-[rgba(37,211,102,0.14)]"
+                    : "border-[var(--border)] bg-[color:var(--surface)]/90 hover:border-[#25D366]/35 hover:bg-[color:var(--surface)]"
                 }`}
               >
                 <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br text-sm font-semibold text-white ${contact.accent}`}>
@@ -328,7 +328,7 @@ const ContactsScreen = ({ activeContactId, onSelectContact }) => (
       </div>
       <button
         type="button"
-        className="absolute bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-[#07110b] shadow-[0_18px_40px_rgba(37,211,102,0.32)]"
+        className="absolute bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,#34d399,#25D366_48%,#16a34a)] text-[#07110b] shadow-[0_18px_46px_rgba(37,211,102,0.38)] transition duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_64px_rgba(37,211,102,0.48)] active:translate-y-0"
       >
         <MessageCircle className="size-6" />
       </button>
@@ -345,7 +345,7 @@ const ChatScreen = ({ activeContact }) => (
         </div>
         <div className="flex-1">
           <p className="font-semibold text-[var(--text-strong)]">{activeContact.name}</p>
-          <p className="text-sm text-[#25D366]">{activeContact.online ? "Online now" : activeContact.lastSeen}</p>
+          <p className="text-sm font-medium text-[#25D366] drop-shadow-[0_0_10px_rgba(37,211,102,0.28)]">{activeContact.online ? "Online now" : activeContact.lastSeen}</p>
         </div>
         <button
           type="button"
@@ -361,10 +361,10 @@ const ChatScreen = ({ activeContact }) => (
         {conversation.map((message) => (
           <div key={message.id} className={`flex ${message.sender === "me" ? "justify-end" : "justify-start"}`}>
             <div
-              className={`max-w-[84%] rounded-[24px] px-4 py-3 shadow-[0_12px_30px_rgba(0,0,0,0.08)] ${
+              className={`max-w-[84%] rounded-[24px] px-4 py-3 shadow-[0_14px_38px_rgba(0,0,0,0.12)] ring-1 ring-white/5 ${
                 message.sender === "me"
-                  ? "rounded-br-md bg-[#25D366] text-[#07110b]"
-                  : "rounded-bl-md bg-[color:var(--bg-soft)] text-[var(--text-strong)]"
+                  ? "rounded-br-md bg-[linear-gradient(135deg,#34d399,#25D366_52%,#16a34a)] text-[#07110b]"
+                  : "rounded-bl-md bg-[color:var(--bg-soft)]/95 text-[var(--text-strong)] backdrop-blur"
               }`}
             >
               <p className={`text-xs font-semibold ${message.sender === "me" ? "text-[#07110b]/70" : "text-[var(--text-muted)]"}`}>
@@ -402,7 +402,7 @@ const ChatScreen = ({ activeContact }) => (
           </div>
         ))}
         <div className="flex items-center gap-2 px-2 text-sm text-[var(--text-muted)]">
-          <span className="h-2 w-2 rounded-full bg-[#25D366]" />
+          <span className="h-2 w-2 rounded-full bg-[#25D366] shadow-[0_0_0_4px_rgba(37,211,102,0.12),0_0_18px_rgba(37,211,102,0.72)]" />
           Alina is typing...
         </div>
       </div>
@@ -421,7 +421,7 @@ const ChatScreen = ({ activeContact }) => (
           </button>
           <button
             type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#25D366] text-[#07110b]"
+            className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#34d399,#25D366_48%,#16a34a)] text-[#07110b] shadow-[0_10px_26px_rgba(37,211,102,0.28)] transition duration-300 ease-out hover:scale-105 active:scale-95"
           >
             <Send className="size-4" />
           </button>
@@ -445,7 +445,7 @@ const InviteScreen = () => (
         </p>
         <button
           type="button"
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-[22px] bg-[#25D366] px-5 py-4 font-semibold text-[#08130b]"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-[20px] bg-[linear-gradient(135deg,#34d399,#25D366_48%,#16a34a)] px-5 py-4 font-semibold text-[#08130b] shadow-[0_18px_46px_rgba(37,211,102,0.3)] transition duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_24px_58px_rgba(37,211,102,0.4)] active:translate-y-0"
         >
           <Share2 className="size-4" />
           Share Invite Link
@@ -551,14 +551,15 @@ const LandingPage = () => {
   }, [activeContact, activeContactId, activeTab]);
 
   return (
-    <main className="relative min-h-screen overflow-hidden px-4 pb-6 pt-4 sm:px-5 lg:px-8">
-      <div className="mesh-orb left-[-140px] top-[-80px] size-[360px] bg-[#25D366]" />
-      <div className="mesh-orb bottom-[-120px] right-[-80px] size-[360px] bg-[#128C7E]" />
+    <main className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_18%_-8%,rgba(37,211,102,0.22),transparent_34%),radial-gradient(circle_at_88%_18%,rgba(59,130,246,0.16),transparent_30%),linear-gradient(180deg,color-mix(in_srgb,var(--bg)_94%,black_6%),var(--bg))] px-4 pb-8 pt-4 sm:px-6 lg:px-8">
+      <div className="mesh-orb left-[-160px] top-[-110px] size-[420px] bg-[#25D366]" />
+      <div className="mesh-orb bottom-[-150px] right-[-90px] size-[430px] bg-[#128C7E]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:72px_72px] opacity-40 [mask-image:linear-gradient(to_bottom,black,transparent_78%)]" />
 
-      <div className="relative z-10 flex min-h-[calc(100vh-2rem)] flex-col">
-        <div className="flex items-center justify-between rounded-[22px] border border-[var(--border)] bg-[color:var(--bg-elevated)] px-4 py-2.5 shadow-[0_16px_40px_rgba(0,0,0,0.1)] backdrop-blur-xl">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-2rem)] max-w-7xl flex-col">
+        <div className="sticky top-4 z-30 flex items-center justify-between rounded-[24px] border border-white/10 bg-[color:var(--bg-elevated)]/82 px-3 py-2.5 shadow-[0_18px_54px_rgba(0,0,0,0.16)] backdrop-blur-2xl sm:px-4">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(37,211,102,0.16)] text-[#25D366]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-[rgba(37,211,102,0.16)] text-[#25D366] shadow-[0_0_0_1px_rgba(37,211,102,0.12)_inset]">
               <MessageCircle className="size-5" />
             </div>
             <div>
@@ -571,13 +572,13 @@ const LandingPage = () => {
             <ThemeToggle binary />
             <Link
               to="/auth?mode=login"
-              className="hidden rounded-full border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--text-strong)] sm:inline-flex"
+              className="hidden rounded-full border border-[var(--border)] bg-white/[0.03] px-4 py-2 text-sm font-medium text-[var(--text-strong)] transition duration-300 ease-out hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-white/[0.07] active:translate-y-0 sm:inline-flex"
             >
               Login
             </Link>
             <Link
               to="/auth?mode=signup"
-              className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-semibold text-[#08130b]"
+              className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#34d399,#25D366_48%,#16a34a)] px-4 py-2 text-sm font-semibold text-[#08130b] shadow-[0_12px_34px_rgba(37,211,102,0.28)] transition duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_44px_rgba(37,211,102,0.38)] active:translate-y-0"
             >
               Get Started
               <ArrowRight className="size-4" />
@@ -585,31 +586,36 @@ const LandingPage = () => {
           </div>
         </div>
 
-        <section className="grid flex-1 gap-5 pb-3 pt-5 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
-          <div className="grid gap-4 lg:pr-5">
+        <section className="grid flex-1 gap-8 pb-8 pt-10 sm:pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:gap-10">
+          <MotionDiv
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
+            className="grid gap-6 lg:pr-5"
+          >
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[var(--text-muted)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[var(--text-muted)]">
                 Full-screen mobile-first experience
               </p>
-              <h1 className="hero-display mt-3 max-w-3xl text-[2.35rem] font-semibold leading-[1.06] text-[var(--text-strong)] sm:text-[3.4rem] xl:text-[3.95rem]">
+              <h1 className="hero-display mt-4 max-w-3xl text-[2.6rem] font-semibold leading-[0.98] text-[var(--text-strong)] sm:text-[4rem] xl:text-[4.65rem]">
                 A messaging interface that feels trusted before the first chat begins.
               </h1>
-              <p className="mt-3 max-w-2xl text-[15px] leading-7 text-[var(--text-soft)] sm:text-base">
+              <p className="mt-5 max-w-2xl text-[15px] leading-8 text-[var(--text-soft)] sm:text-[1.05rem]">
                 Loop Talk turns the landing page into a real product preview: onboarding, permission design, contact syncing, invite loops, and a polished chat surface built for Android and iOS.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 pt-1">
               <Link
                 to="/auth?mode=signup"
-                className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3.5 font-semibold text-[#08130b] shadow-[0_18px_40px_rgba(37,211,102,0.24)]"
+                className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#34d399,#25D366_48%,#16a34a)] px-6 py-3.5 font-semibold text-[#08130b] shadow-[0_18px_46px_rgba(37,211,102,0.32)] transition duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_64px_rgba(37,211,102,0.44)] active:translate-y-0"
               >
                 Start Messaging
                 <ArrowRight className="size-4" />
               </Link>
               <Link
                 to="/auth?mode=login"
-                className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[color:var(--surface)] px-6 py-3.5 font-medium text-[var(--text-strong)]"
+                className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[color:var(--surface)]/75 px-6 py-3.5 font-medium text-[var(--text-strong)] shadow-[0_12px_34px_rgba(0,0,0,0.08)] backdrop-blur-xl transition duration-300 ease-out hover:-translate-y-1 hover:border-[var(--border-strong)] hover:bg-[color:var(--surface)] active:translate-y-0"
               >
                 View Login Flow
               </Link>
@@ -621,24 +627,26 @@ const LandingPage = () => {
                   key={card.title}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35 }}
-                  className={`${screenCardClass} min-h-[156px]`}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  className={`${screenCardClass} flex min-h-[176px] flex-col`}
                 >
-                  <card.icon className="size-5 text-[#25D366]" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[rgba(37,211,102,0.12)] text-[#25D366] shadow-[0_0_0_1px_rgba(37,211,102,0.14)_inset]">
+                    <card.icon className="size-5" />
+                  </div>
                   <p className="mt-5 text-lg font-semibold text-[var(--text-strong)]">{card.title}</p>
-                  <p className="mt-2 text-sm leading-6 text-[var(--text-soft)]">{card.copy}</p>
+                  <p className="mt-2 text-sm leading-7 text-[var(--text-soft)]">{card.copy}</p>
                 </MotionDiv>
               ))}
             </div>
 
-            <div className={`${screenCardClass} grid gap-4 sm:grid-cols-3`}>
+            <div className={`${screenCardClass} grid gap-6 sm:grid-cols-3`}>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--text-muted)]">Design system</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--text-muted)]">Design system</p>
                 <p className="mt-3 text-base font-semibold text-[var(--text-strong)]">Inter / SF Pro inspired typography</p>
                 <p className="mt-2 text-sm leading-6 text-[var(--text-soft)]">8px spacing rhythm, soft shadows, 12 to 20px radii, and clear green accents for trust.</p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--text-muted)]">Primary colors</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--text-muted)]">Primary colors</p>
                 <div className="mt-3 flex gap-3">
                   {[
                     ["#25D366", "Primary"],
@@ -653,15 +661,20 @@ const LandingPage = () => {
                 </div>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--text-muted)]">Ready for build</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--text-muted)]">Ready for build</p>
                 <p className="mt-3 text-sm leading-6 text-[var(--text-soft)]">
                   Every screen is set up as a reusable mobile pattern for auth, sync, invite, and real chat states.
                 </p>
               </div>
             </div>
-          </div>
+          </MotionDiv>
 
-          <div className="grid gap-5">
+          <MotionDiv
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.08 }}
+            className="grid gap-5"
+          >
             <div className={`${screenCardClass} p-4`}>
               <div className="flex flex-wrap gap-2">
                 {screenTabs.map((tab) => {
@@ -672,10 +685,10 @@ const LandingPage = () => {
                       key={tab.id}
                       type="button"
                       onClick={() => setActiveTab(tab.id)}
-                      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition ${
+                      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition duration-300 ease-out active:scale-[0.98] ${
                         isActive
-                          ? "bg-[#25D366] text-[#08130b]"
-                          : "bg-[color:var(--bg-soft)] text-[var(--text-soft)] hover:text-[var(--text-strong)]"
+                          ? "bg-[linear-gradient(135deg,#34d399,#25D366_48%,#16a34a)] text-[#08130b] shadow-[0_10px_26px_rgba(37,211,102,0.26)]"
+                          : "bg-[color:var(--bg-soft)] text-[var(--text-soft)] hover:-translate-y-0.5 hover:bg-[color:var(--surface)] hover:text-[var(--text-strong)]"
                       }`}
                     >
                       <Icon className="size-4" />
@@ -691,14 +704,14 @@ const LandingPage = () => {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
-              className={`${screenCardClass} min-h-[600px]`}
+              className={`${screenCardClass} min-h-[600px] p-5 sm:p-6`}
             >
               {screenPreview}
             </MotionDiv>
-          </div>
+          </MotionDiv>
         </section>
 
-        <section className="grid gap-6 py-6 lg:grid-cols-[0.75fr_1.25fr]">
+        <section className="grid gap-6 py-10 lg:grid-cols-[0.75fr_1.25fr]">
           <div className={screenCardClass}>
             <SectionHeader
               eyebrow="Trust Layer"

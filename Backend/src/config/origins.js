@@ -1,6 +1,7 @@
 const defaultOrigins = [
   "http://localhost:5173",
   "http://127.0.0.1:5173",
+  "https://loop-talk-two.vercel.app",
 ];
 
 const trimOrigin = (origin = "") => origin.trim().replace(/\/$/, "");
@@ -25,4 +26,3 @@ export const isAllowedOrigin = (origin) => {
 
   return privateNetworkPattern.test(normalizedOrigin);
 };
-

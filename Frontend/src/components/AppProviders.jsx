@@ -1,4 +1,3 @@
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useEffect, useMemo, useState } from "react";
 import { AppConfigContext } from "./AppConfigContext";
 import { API_URL, GOOGLE_CLIENT_ID as ENV_GOOGLE_CLIENT_ID } from "../lib/runtime";
@@ -41,11 +40,7 @@ const AppProviders = ({ children }) => {
     <AppConfigContext.Provider value={value}>{children}</AppConfigContext.Provider>
   );
 
-  return googleClientId ? (
-    <GoogleOAuthProvider clientId={googleClientId}>{content}</GoogleOAuthProvider>
-  ) : (
-    content
-  );
+  return content;
 };
 
 export default AppProviders;
