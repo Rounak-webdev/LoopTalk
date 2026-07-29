@@ -100,7 +100,7 @@ export const useAuthStore = create((set, get) => ({
   signup: async (data) => {
     set({ isSigningUp: true });
     try {
-      const res = await axiosInstance.post("/api/auth/signup", data);
+      const res = await axiosInstance.post("/auth/signup", data);
       set({ authUser: res.data.user });
       get().setPendingVerificationEmail("");
       get().setPendingOtpSession(null);
@@ -118,7 +118,7 @@ export const useAuthStore = create((set, get) => ({
   login: async (data) => {
     set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.post("/api/auth/login", data);
+      const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data.user });
       get().setPendingVerificationEmail("");
       get().setPendingOtpSession(null);
@@ -143,7 +143,7 @@ export const useAuthStore = create((set, get) => ({
 
     set({ isVerifyingOtp: true });
     try {
-      const res = await axiosInstance.post("/api/auth/verify-otp", { email, otp });
+      const res = await axiosInstance.post("/auth/verify-otp", { email, otp });
       set({ authUser: res.data.user });
       get().setPendingVerificationEmail("");
       get().connectSocket();
@@ -160,7 +160,7 @@ export const useAuthStore = create((set, get) => ({
   requestAuthOtp: async (payload) => {
     set({ isRequestingAuthOtp: true });
     try {
-      const res = await axiosInstance.post("/api/auth/request-auth-otp", payload);
+      const res = await axiosInstance.post("/auth/request-auth-otp", payload);
       get().setPendingOtpSession({
         channel: res.data.channel,
         destination: res.data.destination,
@@ -189,7 +189,7 @@ export const useAuthStore = create((set, get) => ({
 
     set({ isVerifyingOtp: true });
     try {
-      const res = await axiosInstance.post("/api/auth/verify-auth-otp", {
+      const res = await axiosInstance.post("/auth/verify-auth-otp", {
         channel: pendingOtpSession.channel,
         email: pendingOtpSession.email,
         phoneNumber: pendingOtpSession.phoneNumber,
@@ -219,7 +219,7 @@ export const useAuthStore = create((set, get) => ({
 
     set({ isResendingOtp: true });
     try {
-      const res = await axiosInstance.post("/api/auth/resend-otp", { email });
+      const res = await axiosInstance.post("/auth/resend-otp", { email });
       get().setPendingVerificationEmail(res.data.email || email);
       toast.success(res.data.message || "A new OTP has been sent");
       return true;
@@ -241,7 +241,7 @@ export const useAuthStore = create((set, get) => ({
 
     set({ isResendingOtp: true });
     try {
-      const res = await axiosInstance.post("/api/auth/resend-auth-otp", {
+      const res = await axiosInstance.post("/auth/resend-auth-otp", {
         channel: pendingOtpSession.channel,
         email: pendingOtpSession.email,
         phoneNumber: pendingOtpSession.phoneNumber,
@@ -263,7 +263,7 @@ export const useAuthStore = create((set, get) => ({
   googleAuth: async (token) => {
     set({ isGoogleAuthLoading: true });
     try {
-      const res = await axiosInstance.post("/api/auth/google", { token });
+      const res = await axiosInstance.post("/auth/google", { token });
       set({ authUser: res.data.user });
       get().setPendingVerificationEmail("");
       get().connectSocket();
@@ -285,7 +285,7 @@ export const useAuthStore = create((set, get) => ({
 
     set({ isSendingResetEmail: true });
     try {
-      const res = await axiosInstance.post("/api/auth/forgot-password", { email });
+      const res = await axiosInstance.post("/auth/forgot-password", { email });
       toast.success(res.data.message || "Reset email sent");
       return true;
     } catch (error) {
@@ -299,7 +299,7 @@ export const useAuthStore = create((set, get) => ({
   resetPassword: async (token, password) => {
     set({ isResettingPassword: true });
     try {
-      const res = await axiosInstance.post("/api/auth/reset-password", { token, password });
+      const res = await axiosInstance.post("/auth/reset-password", { token, password });
       toast.success(res.data.message || "Password updated");
       return true;
     } catch (error) {
@@ -322,10 +322,23 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  setPassword: async (password, confirmPassword) => {
+  try {
+    await axiosInstance.post("/api/auth/set-password", {
+      password,
+      confirmPassword,
+    });
+
+    toast.success("Password added successfully");
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Failed");
+  }
+},
+
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
     try {
-      const res = await axiosInstance.put("/api/auth/update-profile", data);
+      const res = await axiosInstance.put("/auth/update-profile", data);
       set({ authUser: res.data.user });
       toast.success("Profile updated successfully");
     } catch (error) {

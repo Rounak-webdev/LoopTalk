@@ -68,24 +68,34 @@ const sendOtpByChannel = async ({ channel, email, phoneNumber, name, otp }) => {
 const hasDeliverableDomain = async (email) => {
   const domain = email.split("@")[1];
 
-  if (!domain || blockedEmailDomains.has(domain)) {
-    return false;
-  }
+  console.log("Checking domain:", domain);
 
   try {
     const mxRecords = await resolveMx(domain);
+    console.log("MX:", mxRecords);
+
     if (mxRecords.length > 0) return true;
-  } catch {}
+  } catch (err) {
+    console.log("MX ERROR:", err.message);
+  }
 
   try {
     const aRecords = await resolve4(domain);
+    console.log("A:", aRecords);
+
     if (aRecords.length > 0) return true;
-  } catch {}
+  } catch (err) {
+    console.log("A ERROR:", err.message);
+  }
 
   try {
     const aaaaRecords = await resolve6(domain);
+    console.log("AAAA:", aaaaRecords);
+
     if (aaaaRecords.length > 0) return true;
-  } catch {}
+  } catch (err) {
+    console.log("AAAA ERROR:", err.message);
+  }
 
   return false;
 };
@@ -109,10 +119,10 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: "Enter a valid email address" });
     }
 
-    const isDeliverableDomain = await hasDeliverableDomain(normalizedEmail);
-    if (!isDeliverableDomain) {
-      return res.status(400).json({ message: "Please use a real email inbox you can access" });
-    }
+    const isDeliverableDomain = true ;//await hasDeliverableDomain(normalizedEmail);
+    // if (!isDeliverableDomain) {
+    //   return res.status(400).json({ message: "Please use a real email inbox you can access" });
+    // }
 
     if (password.length < 6) {
       return res.status(400).json({ message: "Password must be at least 6 characters" });
@@ -144,7 +154,7 @@ export const signup = async (req, res) => {
           name: displayName,
           email: normalizedEmail,
           password: hashedPassword,
-          isVerified: true,
+          isVerified: false,
         });
 
     issueAuthSession(res, user);
@@ -179,9 +189,12 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    if (!user.password) {
-      return res.status(400).json({ message: "Use Google sign-in for this account" });
-    }
+   if (!user.password) {
+    return res.status(400).json({
+        message:
+          "This account uses Google Sign-In. Add a password from Settings if you'd like to log in with email and password as well.",
+    });
+}
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
@@ -300,10 +313,7 @@ export const requestAuthOtp = async (req, res) => {
         return res.status(400).json({ message: "Enter a valid email address" });
       }
 
-      const isDeliverableDomain = await hasDeliverableDomain(normalizedEmail);
-      if (!isDeliverableDomain) {
-        return res.status(400).json({ message: "Please use a real email inbox you can access" });
-      }
+       const isDeliverableDomain = true ;
 
       user = await User.findOne({ email: normalizedEmail });
     } else {
@@ -511,10 +521,10 @@ export const forgotPassword = async (req, res) => {
       return res.status(400).json({ message: "Enter a valid email address" });
     }
 
-    const isDeliverableDomain = await hasDeliverableDomain(normalizedEmail);
-    if (!isDeliverableDomain) {
-      return res.status(400).json({ message: "Please use a real email inbox you can access" });
-    }
+    const isDeliverableDomain = true;// await hasDeliverableDomain(normalizedEmail);
+    // if (!isDeliverableDomain) {
+    //   return res.status(400).json({ message: "Please use a real email inbox you can access" });
+    // }
 
     const user = await User.findOne({ email: normalizedEmail });
 
@@ -667,6 +677,59 @@ export const updateProfile = async (req, res) => {
   } catch (error) {
     console.error("ERROR:", error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const setPassword = async (req, res) => {
+  try {
+    const { password, confirmPassword } = req.body;
+
+    if (!password || !confirmPassword) {
+      return res.status(400).json({
+        message: "Both password fields are required",
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        message: "Passwords do not match",
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 characters",
+      });
+    }
+
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    if (user.password) {
+      return res.status(400).json({
+        message: "Password already exists",
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Password added successfully",
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
   }
 };
 
