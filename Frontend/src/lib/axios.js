@@ -4,6 +4,7 @@ import { API_URL } from "./runtime";
 export const axiosInstance = axios.create({
   baseURL: API_URL,
   withCredentials: true,
+  timeout: 10000, 
   headers: {
     "Content-Type": "application/json",
   },
