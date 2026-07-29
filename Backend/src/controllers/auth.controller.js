@@ -619,9 +619,11 @@ export const googleAuth = async (req, res) => {
     issueAuthSession(res, user);
     return res.status(200).json(authPayload(user));
   } catch (error) {
-    console.error("ERROR:", error);
-    return res.status(500).json({ message: "Google sign-in failed" });
-  }
+  console.error("GOOGLE AUTH ERROR:", error);
+  return res.status(500).json({
+    message: error.message,
+  });
+}
 };
 
 export const googleAuthConfig = (_req, res) => {
